@@ -38,6 +38,20 @@ function atualizarCarrinho() {
     `;
   }
 }
+document.addEventListener("DOMContentLoaded", function () {
+  const dropdown = document.querySelector("[data-bs-toggle='dropdown']");
+  const menu = dropdown.nextElementSibling;
+
+  dropdown.parentElement.addEventListener("mouseenter", () => {
+    const bsDropdown = new bootstrap.Dropdown(dropdown);
+    bsDropdown.show();
+  });
+
+  dropdown.parentElement.addEventListener("mouseleave", () => {
+    const bsDropdown = new bootstrap.Dropdown(dropdown);
+    bsDropdown.hide();
+  });
+});
 
 // busca dados da api
 fetch("https://dummyjson.com/products")
@@ -52,20 +66,29 @@ fetch("https://dummyjson.com/products")
           .slice(0, 6)
           .map(
             (produto) => `
-          <div class="produto-item">
-            <img src="${produto.thumbnail}" alt="${produto.title}">
-            <h2>${produto.title}</h2>
-            <p>${produto.description}</p>
-            <div class="price">Preço: R$ ${produto.price}</div>
-            <div class="rating">Avalição: ${produto.rating}</div>
-            <button class="btn-comprar "
-              data-bs-toggle="modal"
-              data-bs-target="#staticBackdrop">Comprar</button>
-            <button class="btn-carrinho  btn-add-carrinho" 
-              data-produto="${encodeURIComponent(JSON.stringify(produto))}">
-              Adicionar ao Carrinho
-            </button>
-          </div>
+            <div class="produto-item">
+              <a style="text-decoration: none;" href="produto.html?id=${
+                produto.id
+              }" >
+                <img src="${produto.thumbnail}" alt="${produto.title}">
+                <h2>${produto.title}</h2>
+                <p>${produto.description}</p>
+                <div class="price">Preço: R$ ${produto.price}</div>
+                <div class="rating">Avalição: ${produto.rating}</div>
+              </a>
+              <button class="btn-comprar "
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop">Comprar
+              </button>
+              <button class="btn-carrinho  btn-add-carrinho" 
+                  data-produto="${encodeURIComponent(JSON.stringify(produto))}">
+                  Adicionar ao Carrinho
+              </button>
+                
+                
+              
+            </div>
+          
         `
           )
           .join("")}
@@ -107,6 +130,59 @@ fetch("https://dummyjson.com/products")
       "<p>Error ao carregar produto</p>";
   });
 
+// pagina produto
+
+if (window.location.pathname.includes("produto.html")) {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  if (!id) {
+    document.getElementById("produto-info").innerHTML =
+      "<h2>ID do produto não encontrado</h2>";
+  } else {
+    fetch("https://dummyjson.com/products/" + id)
+      .then((res) => res.json())
+      .then((produto) => {
+        document.getElementById("produto-info").innerHTML = `
+              <div class="produto-grid">
+
+                <div class="produto-galeria">
+                  <img class="imagem-principal" src="${produto.thumbnail}">
+                  <div class="miniaturas">
+                    ${produto.images
+                      .slice(0, 4)
+                      .map((img) => `<img src="${img}">`)
+                      .join("")}
+                  </div>
+                </div>
+
+                <div class="produto-dados">
+                  <h1>${produto.title}</h1>
+
+                  <div class="estrelas">⭐ ${produto.rating}</div>
+
+                  <div class="produto-preco">R$ ${produto.price}</div>
+
+                  <button class="btn-add">Adicionar ao Carrinho</button>
+                  <button class="btn-comp" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop">Comprar</button>
+
+                  <div class="descricao-box">
+                    <h3>Descrição do Produto</h3>
+                    <p>${produto.description}</p>
+                  </div>
+                </div>
+
+              </div>
+            `;
+        // botão "Adicionar ao Carrinho"
+        document.querySelector(".btn-add").addEventListener("click", () => {
+          addcarrinho(produto);
+        });
+      });
+  }
+}
+
 // carrega qrcode de api externa
 const img = document.getElementById("qrcode");
 
@@ -139,8 +215,7 @@ async function gerarQRCode() {
   try {
     // conexao api
     const response = await fetch(`${apiURL}?${params.toString()}`);
-    //if(!response.ok) throw new Error("Erro ao gerar o qrcode");
-    // salva o qrcode gerado e exibe no docunto
+
     const blob = await response.blob();
     const imageUrl = URL.createObjectURL(blob);
     img.src = imageUrl;
