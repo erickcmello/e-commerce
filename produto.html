@@ -18,6 +18,13 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </head>
 
   <body class="d-flex flex-column">
@@ -27,30 +34,36 @@
         <span><h1>E-commerce</h1></span>
       </div> -->
       <div class="conteiner">
-        <span onclick="window.location.href = 'index.html';" class="material-symbols-outlined"> home </span>
         <span
-              class=" material-symbols-outlined "
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              shopping_cart_checkout 
-            </span>
-            <ul class="dropdown-menu bg-muted p-3" id="produto-cardcar" >
-              <!-- <li>
-                <a class="dropdown-item" href="#">...</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">...</a>
-              </li> -->
-            </ul>
-          </li>
-        </ul>
+          onclick="window.location.href = 'index.html';"
+          class="material-symbols-outlined"
+        >
+          home
+        </span>
+        <div class="dropdown">
+          <span
+            onclick="window.location.href='carrinho.html'"
+            class="material-symbols-outlined"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            shopping_cart_checkout
+          </span>
+
+          <ul class="dropdown-menu bg-muted p-3" id="produto-cardcar">
+            <!-- <li>
+                  <a class="dropdown-item" href="#">...</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">...</a>
+                </li> -->
+          </ul>
+        </div>
       </div>
     </header>
 
     <!-- Conteúdo -->
     <main class="produto-container" id="produto-info">Carregando...</main>
-
 
     <!-- Modal -->
     <div
@@ -93,10 +106,25 @@
       </div>
     </div>
 
-
     <!--estrutura rodapé-->
-    <footer class=" d-flex justify-content-center align-items-center py-3 my-4 border-top w-100">Todos Direitos Reservados</footer>
+    <footer class="footer-custom border-top mt-5">
+      <div class="footer-container">
+        <!-- Esquerda -->
+        <div class="footer-left">
+          <p>Página inicial</p>
+          <p>Contato</p>
+        </div>
 
+        <!-- Direita -->
+        <div class="footer-right">
+          <p class="titulo-loja">LOJA física<br />em Porto Alegre</p>
+          <div id="mapa" class="mapa-footer"></div>
+        </div>
+      </div>
+
+      <!-- Texto inferior -->
+      <div class="footer-bottom">Todos Direitos Reservados</div>
+    </footer>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -104,6 +132,5 @@
       crossorigin="anonymous"
     ></script>
     <script src="script.js"></script>
-
   </body>
 </html>
